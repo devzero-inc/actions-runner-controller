@@ -187,10 +187,45 @@ template:
   ##                 requests:
   ##                   storage: 1Gi
   spec:
+    runtimeClassName: kata
+    tolerations:
+    - key: "kata-devpod-node"
+      operator: "Equal"
+      value: "true"
+      effect: "NoExecute"
+    nodeSelector:
+      kata-runtime: running
+    dnsPolicy: "None"
+    dnsConfig:
+      nameservers:
+        - 1.1.1.1
+        - 1.0.0.1
+    volumes:
+      - name: work
+        ephemeral:
+          volumeClaimTemplate:
+            spec:
+              accessModes: ["ReadWriteOnce"]
+              storageClassName: "gp2"
+              volumeMode: Block
+              resources:
+                requests:
+                  storage: 25G
     containers:
       - name: runner
-        image: ghcr.io/actions/actions-runner:latest
-        command: ["/home/runner/run.sh"]
+        image: "ghcr.io/devzero-inc/actions-runner"
+        imagePullPolicy: Always
+        volumeDevices:
+          - devicePath: /dev/persist
+            name: work
+        env:
+          - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
+            value: "false"
+        command: ["/usr/bin/dzboot"]
+        resources:
+          limits:
+            cpu: '2'
+            memory: '4G'
 
 ## Optional controller service account that needs to have required Role and RoleBinding
 ## to operate this gha-runner-scale-set installation.
