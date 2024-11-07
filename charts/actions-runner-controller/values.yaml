@@ -50,8 +50,8 @@ authSecret:
 # http(s) should be specified for dockerRegistryMirror, e.g.: dockerRegistryMirror="https://<your-docker-registry-mirror>"
 dockerRegistryMirror: ""
 image:
-  repository: "summerwind/actions-runner-controller"
-  actionsRunnerRepositoryAndTag: "summerwind/actions-runner:latest"
+  repository: "ghcr.io/devzero-inc/actions-runner-controller"
+  actionsRunnerRepositoryAndTag: "ghcr.io/devzero-inc/actions-runner:latest"
   dindSidecarRepositoryAndTag: "docker:dind"
   pullPolicy: IfNotPresent
   # The default image-pull secrets name for self-hosted runner container.
