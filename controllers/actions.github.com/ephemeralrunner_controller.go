@@ -258,13 +258,13 @@ func (r *EphemeralRunnerReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		}
 		return ctrl.Result{}, nil
 
-	case cs.State.Terminated.ExitCode != 0: // failed
-		log.Info("Ephemeral runner container failed", "exitCode", cs.State.Terminated.ExitCode)
-		if err := r.deletePodAsFailed(ctx, ephemeralRunner, pod, log); err != nil {
-			log.Error(err, "Failed to delete runner pod on failure")
-			return ctrl.Result{}, err
-		}
-		return ctrl.Result{}, nil
+	// case cs.State.Terminated.ExitCode != 0: // failed
+	// 	log.Info("Ephemeral runner container failed", "exitCode", cs.State.Terminated.ExitCode)
+	// 	if err := r.deletePodAsFailed(ctx, ephemeralRunner, pod, log); err != nil {
+	// 		log.Error(err, "Failed to delete runner pod on failure")
+	// 		return ctrl.Result{}, err
+	// 	}
+	// 	return ctrl.Result{}, nil
 
 	default:
 		// pod succeeded. We double-check with the service if the runner exists.
