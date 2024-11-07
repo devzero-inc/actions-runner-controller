@@ -213,7 +213,7 @@ template:
                   storage: 25G
     containers:
       - name: runner
-        image: "ghcr.io/devzero-inc/actions-runner"
+        image: "ghcr.io/devzero-inc/actions-runner:latest"
         imagePullPolicy: Always
         volumeDevices:
           - devicePath: /dev/persist
