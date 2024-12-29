@@ -223,9 +223,12 @@ template:
             value: "false"
         command: ["/usr/bin/dzboot"]
         resources:
-          limits:
+          requests:
             cpu: '2'
             memory: '4G'
+          limits:
+            cpu: '4'
+            memory: '6G'
 
 ## Optional controller service account that needs to have required Role and RoleBinding
 ## to operate this gha-runner-scale-set installation.
