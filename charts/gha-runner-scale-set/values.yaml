@@ -221,29 +221,32 @@ template:
           volumeClaimTemplate:
             spec:
               accessModes: ["ReadWriteOnce"]
-              storageClassName: "gp2"
               volumeMode: Block
               resources:
                 requests:
-                  storage: 25G
+                  storage: 50G
     containers:
       - name: runner
-        image: "ghcr.io/devzero-inc/actions-runner:latest"
-        imagePullPolicy: Always
+        stdin: true
+        tty: true
+        image: "devzeroinc/gha-scale-set-runner-ubuntu:24.04-devel"
+        imagePullPolicy: IfNotPresent
         volumeDevices:
           - devicePath: /dev/persist
             name: work
         env:
           - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
             value: "false"
+          - name: DZBOOT_MOUNTS
+            value: '[{"path":"/var/lib/docker","user":"runner","group":"runner","permissions":"0755","device_path":"/dev/persist"},{"path":"/runner/_work","user":"runner","permissions":"0755","group":"runner","device_path":"/dev/persist"},{"path":"/home/runner/_work","user":"runner","group":"runner","permissions":"0775","device_path":"/dev/persist"},{"path":"/var/lib/sysbox","user":"runner","group":"runner","permissions":"0775","device_path":"/dev/persist"},{"path":"/tmp","user":"runner","group":"runner","permissions":"0755","device_path":"/dev/persist"}]'
         command: ["/usr/bin/dzboot"]
         resources:
           requests:
-            cpu: '2'
-            memory: '4G'
+            cpu: '100m'
+            memory: '16G'
           limits:
             cpu: '4'
-            memory: '6G'
+            memory: '16G'
 
 ## Optional controller service account that needs to have required Role and RoleBinding
 ## to operate this gha-runner-scale-set installation.
