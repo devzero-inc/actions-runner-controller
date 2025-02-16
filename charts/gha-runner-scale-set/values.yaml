@@ -119,6 +119,17 @@ githubConfigSecret:
 #     # Spec for this container will be applied as is without any modifications.
 #     - name: side-car
 #       image: example-sidecar
+listenerTemplate:
+  spec:
+    containers:
+      - name: listener
+        securityContext:
+          runAsUser: 1000
+  metadata:
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "8080"
+      prometheus.io/path: "/metrics"
 
 ## template is the PodSpec for each runner Pod
 ## For reference: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec

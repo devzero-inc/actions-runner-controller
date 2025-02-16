@@ -108,6 +108,9 @@ service:
 
 # Metrics service resource
 metrics:
+  controllerManagerAddr: ":8080"
+  listenerAddr: ":8080"
+  listenerEndpoint: "/metrics"
   serviceAnnotations: {}
   serviceMonitor:
     enable: false
@@ -233,7 +236,10 @@ githubWebhookServer:
     # The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
     name: ""
-  podAnnotations: {}
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "8080"
   podLabels: {}
   podSecurityContext: {}
   # fsGroup: 2000
