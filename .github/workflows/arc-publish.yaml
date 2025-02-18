@@ -22,7 +22,7 @@ permissions:
  packages: write
 
 env:
-  TARGET_ORG: actions-runner-controller
+  TARGET_ORG: devzero-inc
   TARGET_REPO: actions-runner-controller
 
 concurrency:
@@ -75,8 +75,8 @@ jobs:
         id: get_workflow_token
         uses: peter-murray/workflow-application-token-action@dc0413987a085fa17d19df9e47d4677cf81ffef3
         with:
-          application_id: ${{ secrets.ACTIONS_ACCESS_APP_ID }}
-          application_private_key: ${{ secrets.ACTIONS_ACCESS_PK }}
+          application_id: ${{ secrets.WORKFLOW_ACTIONS_APP_ID }}
+          application_private_key: ${{ secrets.WORKFLOW_ACTIONS_PEM }}
           organization: ${{ env.TARGET_ORG }}
 
       - name: Resolve push to registries
