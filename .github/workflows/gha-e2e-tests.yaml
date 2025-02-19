@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 env:
-  TARGET_ORG: actions-runner-controller
+  TARGET_ORG: devzero-inc
   TARGET_REPO: arc_e2e_test_dummy
   IMAGE_NAME: "arc-test-image"
   IMAGE_VERSION: "0.10.1"

@@ -173,6 +173,14 @@ jobs:
           --package-path .cr-release-packages \
           --token ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Ensure gh-pages branch exists
+      run: |
+        if ! git ls-remote --exit-code --heads origin gh-pages; then
+          git checkout --orphan gh-pages
+          git commit --allow-empty -m "Initialize gh-pages branch"
+          git push origin gh-pages
+        fi
+
     - name: Generate updated index.yaml
       run: |
         cr index \
@@ -181,7 +189,7 @@ jobs:
           --index-path ${{ github.workspace }}/index.yaml \
           --token ${{ secrets.GITHUB_TOKEN }} \
           --push \
-          --pages-branch 'gh-pages' \
+          --pages-branch 'gh-pages' --remote origin \
           --pages-index-path 'index.yaml'
 
     # Chart Release was never intended to publish to a different repo
@@ -192,7 +200,7 @@ jobs:
       with:
         repository: ${{ env.CHART_TARGET_ORG }}/${{ env.CHART_TARGET_REPO }}
         path: ${{ env.CHART_TARGET_REPO }}
-        ref: ${{ env.CHART_TARGET_BRANCH }}
+        ref: gh-pages
         token: ${{ steps.get_workflow_token.outputs.token }}
 
     - name: Copy index.yaml
