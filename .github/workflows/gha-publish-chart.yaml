@@ -1,6 +1,10 @@
 name: (gha) Publish Helm Charts
 
 on:
+  # test
+  pull_request:
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       ref:
