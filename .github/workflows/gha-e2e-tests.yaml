@@ -40,8 +40,8 @@ jobs:
       - uses: ./.github/actions/setup-arc-e2e
         id: setup
         with:
-          app-id: ${{secrets.E2E_TESTS_ACCESS_APP_ID}}
-          app-pk: ${{secrets.E2E_TESTS_ACCESS_PK}}
+          app-id: ${{ secrets.WORKFLOW_ACTIONS_APP_ID }}
+          app-pk: ${{ secrets.WORKFLOW_ACTIONS_PEM }}
           image-name: ${{env.IMAGE_NAME}}
           image-tag: ${{env.IMAGE_VERSION}}
           target-org: ${{env.TARGET_ORG}}
@@ -131,8 +131,8 @@ jobs:
       - uses: ./.github/actions/setup-arc-e2e
         id: setup
         with:
-          app-id: ${{secrets.E2E_TESTS_ACCESS_APP_ID}}
-          app-pk: ${{secrets.E2E_TESTS_ACCESS_PK}}
+          app-id: ${{ secrets.WORKFLOW_ACTIONS_APP_ID }}
+          app-pk: ${{ secrets.WORKFLOW_ACTIONS_PEM }}
           image-name: ${{env.IMAGE_NAME}}
           image-tag: ${{env.IMAGE_VERSION}}
           target-org: ${{env.TARGET_ORG}}
@@ -224,8 +224,8 @@ jobs:
       - uses: ./.github/actions/setup-arc-e2e
         id: setup
         with:
-          app-id: ${{secrets.E2E_TESTS_ACCESS_APP_ID}}
-          app-pk: ${{secrets.E2E_TESTS_ACCESS_PK}}
+          app-id: ${{ secrets.WORKFLOW_ACTIONS_APP_ID }}
+          app-pk: ${{ secrets.WORKFLOW_ACTIONS_PEM }}
           image-name: ${{env.IMAGE_NAME}}
           image-tag: ${{env.IMAGE_VERSION}}
           target-org: ${{env.TARGET_ORG}}
@@ -316,8 +316,8 @@ jobs:
       - uses: ./.github/actions/setup-arc-e2e
         id: setup
         with:
-          app-id: ${{secrets.E2E_TESTS_ACCESS_APP_ID}}
-          app-pk: ${{secrets.E2E_TESTS_ACCESS_PK}}
+          app-id: ${{ secrets.WORKFLOW_ACTIONS_APP_ID }}
+          app-pk: ${{ secrets.WORKFLOW_ACTIONS_PEM }}
           image-name: ${{env.IMAGE_NAME}}
           image-tag: ${{env.IMAGE_VERSION}}
           target-org: ${{env.TARGET_ORG}}
@@ -417,8 +417,8 @@ jobs:
       - uses: ./.github/actions/setup-arc-e2e
         id: setup
         with:
-          app-id: ${{secrets.E2E_TESTS_ACCESS_APP_ID}}
-          app-pk: ${{secrets.E2E_TESTS_ACCESS_PK}}
+          app-id: ${{ secrets.WORKFLOW_ACTIONS_APP_ID }}
+          app-pk: ${{ secrets.WORKFLOW_ACTIONS_PEM }}
           image-name: ${{env.IMAGE_NAME}}
           image-tag: ${{env.IMAGE_VERSION}}
           target-org: ${{env.TARGET_ORG}}
@@ -520,8 +520,8 @@ jobs:
       - uses: ./.github/actions/setup-arc-e2e
         id: setup
         with:
-          app-id: ${{secrets.E2E_TESTS_ACCESS_APP_ID}}
-          app-pk: ${{secrets.E2E_TESTS_ACCESS_PK}}
+          app-id: ${{ secrets.WORKFLOW_ACTIONS_APP_ID }}
+          app-pk: ${{ secrets.WORKFLOW_ACTIONS_PEM }}
           image-name: ${{env.IMAGE_NAME}}
           image-tag: ${{env.IMAGE_VERSION}}
           target-org: ${{env.TARGET_ORG}}
@@ -617,8 +617,8 @@ jobs:
       - uses: ./.github/actions/setup-arc-e2e
         id: setup
         with:
-          app-id: ${{secrets.E2E_TESTS_ACCESS_APP_ID}}
-          app-pk: ${{secrets.E2E_TESTS_ACCESS_PK}}
+          app-id: ${{ secrets.WORKFLOW_ACTIONS_APP_ID }}
+          app-pk: ${{ secrets.WORKFLOW_ACTIONS_PEM }}
           image-name: ${{env.IMAGE_NAME}}
           image-tag: ${{env.IMAGE_VERSION}}
           target-org: ${{env.TARGET_ORG}}
@@ -739,8 +739,8 @@ jobs:
       - uses: ./.github/actions/setup-arc-e2e
         id: setup
         with:
-          app-id: ${{secrets.E2E_TESTS_ACCESS_APP_ID}}
-          app-pk: ${{secrets.E2E_TESTS_ACCESS_PK}}
+          app-id: ${{ secrets.WORKFLOW_ACTIONS_APP_ID }}
+          app-pk: ${{ secrets.WORKFLOW_ACTIONS_PEM }}
           image-name: ${{env.IMAGE_NAME}}
           image-tag: ${{env.IMAGE_VERSION}}
           target-org: ${{env.TARGET_ORG}}
@@ -911,8 +911,8 @@ jobs:
       - uses: ./.github/actions/setup-arc-e2e
         id: setup
         with:
-          app-id: ${{secrets.E2E_TESTS_ACCESS_APP_ID}}
-          app-pk: ${{secrets.E2E_TESTS_ACCESS_PK}}
+          app-id: ${{ secrets.WORKFLOW_ACTIONS_APP_ID }}
+          app-pk: ${{ secrets.WORKFLOW_ACTIONS_PEM }}
           image-name: ${{env.IMAGE_NAME}}
           image-tag: ${{env.IMAGE_VERSION}}
           target-org: ${{env.TARGET_ORG}}
