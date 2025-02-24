@@ -43,6 +43,8 @@ You can follow [this troubleshooting guide](https://docs.github.com/en/actions/h
 
 ## Changelog
 
+### 0.10.1-test
+
 ### 0.10.1
 
 1. Fix helm chart bug related to `runnerMaxConcurrentReconciles` [#3858](https://github.com/actions/actions-runner-controller/pull/3858)
