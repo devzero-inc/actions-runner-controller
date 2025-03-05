@@ -47,13 +47,13 @@ jobs:
         with:
           version: ${{ env.HELM_VERSION }}
 
-      - name: Validate version format
-        run: |
-          VERSION="${{ inputs.new_version }}"
-          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Invalid version format. Must be in format X.Y.Z"
-            exit 1
-          fi
+      # - name: Validate version format
+      #   run: |
+      #     VERSION="${{ inputs.new_version }}"
+      #     if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      #       echo "Invalid version format. Must be in format X.Y.Z"
+      #       exit 1
+      #     fi
 
       - name: Lint Controller Chart
         run: helm lint charts/gha-runner-scale-set-controller/

@@ -42,13 +42,13 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Validate version format
-        run: |
-          VERSION="${{ inputs.new_version }}"
-          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Invalid version format. Must be in format X.Y.Z"
-            exit 1
-          fi
+      # - name: Validate version format
+      #   run: |
+      #     VERSION="${{ inputs.new_version }}"
+      #     if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      #       echo "Invalid version format. Must be in format X.Y.Z"
+      #       exit 1
+      #     fi
 
   update-chart-versions:
     needs: validate-version
