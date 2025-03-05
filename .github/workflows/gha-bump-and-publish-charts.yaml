@@ -76,7 +76,7 @@ jobs:
           sed -i "s/^appVersion: .*/appVersion: \"${{ inputs.new_version }}\"/" charts/gha-runner-scale-set/Chart.yaml
 
       - name: Verify versions match
-        run: ./hack/check-gh-chart-versions.sh ${{ inputs.new_version }}
+        run: ./hack/check-gh-chart-versions.sh ${{ github.event.inputs.new_version }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6

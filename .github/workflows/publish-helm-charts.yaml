@@ -96,6 +96,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set Release Tag from Input
+        run: |
+          if [ -z "${{ github.event.inputs.new_version }}" ]; then
+            echo "Using default RELEASE_TAG=canary"
+            echo "RELEASE_TAG=canary" >> $GITHUB_ENV
+          else
+            echo "Using provided RELEASE_TAG=${{ github.event.inputs.new_version }}"
+            echo "RELEASE_TAG=${{ github.event.inputs.new_version }}" >> $GITHUB_ENV
+          fi
+
       - name: Build & Push Controller Image
         uses: docker/build-push-action@v5
         with:
