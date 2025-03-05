@@ -7,6 +7,7 @@ on:
         description: 'New version number (e.g. 0.10.2)'
         required: true
         type: string
+        default: 0.10.2 # test
       ref:
         description: 'The branch, tag or SHA to cut a release from'
         required: false

@@ -16,7 +16,7 @@ on:
         description: 'Push images to registries'
         required: true
         type: boolean
-        default: false
+        default: true
   #test
   pull_request:
     branches:
@@ -24,6 +24,8 @@ on:
 
 env:
   HELM_VERSION: v3.8.0
+  # For an auto release default to "canary" or derive the release tag from input.
+  RELEASE_TAG: canary
 
 permissions:
   contents: write
@@ -100,7 +102,7 @@ jobs:
           file: Dockerfile
           platforms: linux/amd64,linux/arm64
           build-args: VERSION=${{ env.RELEASE_TAG }}
-          push: ${{ github.event.inputs.push_to_registries }}
+          push: ${{ github.event.inputs.push_to_registries == 'true' }}
           tags: |
             ghcr.io/${{ steps.resolve_parameters.outputs.repository_owner }}/gha-runner-scale-set-controller:${{ env.RELEASE_TAG }}
             ghcr.io/${{ steps.resolve_parameters.outputs.repository_owner }}/gha-runner-scale-set-controller:${{ env.RELEASE_TAG }}-${{ steps.resolve_parameters.outputs.short_sha }}
