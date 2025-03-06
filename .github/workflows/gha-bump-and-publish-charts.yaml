@@ -7,18 +7,17 @@ on:
         description: 'New version number (e.g. 0.10.2)'
         required: true
         type: string
-        default: 0.10.2 # test
+        default: "0.10.2" # test
       ref:
         description: 'The branch, tag or SHA to cut a release from'
         required: false
         type: string
-        default: ''
+        default: ""
       push_to_registries:
         description: 'Push images to registries'
         required: true
         type: boolean
         default: false
-  # test
   pull_request:
     branches:
       - master
@@ -26,6 +25,7 @@ on:
 permissions:
   contents: write
   packages: write
+  pull-requests: write
 
 env:
   HELM_VERSION: v3.8.0
@@ -35,25 +35,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate-version:
+  bump-and-publish:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      # - name: Validate version format
-      #   run: |
-      #     VERSION="${{ inputs.new_version }}"
-      #     if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-      #       echo "Invalid version format. Must be in format X.Y.Z"
-      #       exit 1
-      #     fi
-
-  update-chart-versions:
-    needs: validate-version
-    runs-on: ubuntu-latest
+    # Set NEW_VERSION to the input value when triggered via workflow_dispatch.
+    # Otherwise (e.g. for pull_request events) default to "0.10.2".
+    env:
+      NEW_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.new_version || '0.10.2' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -65,50 +52,48 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: Update chart versions
+      - name: Update chart versions for gha-runner-scale-set-controller
         run: |
-          # Update gha-runner-scale-set-controller Chart.yaml
-          sed -i "s/^version: .*/version: ${{ inputs.new_version }}/" charts/gha-runner-scale-set-controller/Chart.yaml
-          sed -i "s/^appVersion: .*/appVersion: \"${{ inputs.new_version }}\"/" charts/gha-runner-scale-set-controller/Chart.yaml
-          
-          # Update gha-runner-scale-set Chart.yaml
-          sed -i "s/^version: .*/version: ${{ inputs.new_version }}/" charts/gha-runner-scale-set/Chart.yaml
-          sed -i "s/^appVersion: .*/appVersion: \"${{ inputs.new_version }}\"/" charts/gha-runner-scale-set/Chart.yaml
+          sed -i "s/^version: .*/version: ${NEW_VERSION}/" charts/gha-runner-scale-set-controller/Chart.yaml
+          sed -i "s/^appVersion: .*/appVersion: \"${NEW_VERSION}\"/" charts/gha-runner-scale-set-controller/Chart.yaml
+
+      - name: Update chart versions for gha-runner-scale-set
+        run: |
+          sed -i "s/^version: .*/version: ${NEW_VERSION}/" charts/gha-runner-scale-set/Chart.yaml
+          sed -i "s/^appVersion: .*/appVersion: \"${NEW_VERSION}\"/" charts/gha-runner-scale-set/Chart.yaml
 
       - name: Verify versions match
-        run: ./hack/check-gh-chart-versions.sh ${{ github.event.inputs.new_version }}
+        run: ./hack/check-gh-chart-versions.sh ${NEW_VERSION}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          title: "chore: bump chart versions to ${{ inputs.new_version }}"
-          commit-message: "chore: bump chart versions to ${{ inputs.new_version }}"
-          branch: "bump-chart-version-${{ inputs.new_version }}"
+          title: "chore: bump chart versions to ${{ env.NEW_VERSION }}"
+          commit-message: "chore: bump chart versions to ${{ env.NEW_VERSION }}"
+          branch: "bump-chart-version-${{ env.NEW_VERSION }}"
+          base: "master"
           body: |
             Automated PR to bump chart versions:
-            - gha-runner-scale-set-controller: ${{ inputs.new_version }}
-            - gha-runner-scale-set: ${{ inputs.new_version }}
+            - gha-runner-scale-set-controller: ${{ env.NEW_VERSION }}
+            - gha-runner-scale-set: ${{ env.NEW_VERSION }}
             
             Please review and merge to trigger chart publishing.
 
-  trigger-publish:
-    needs: update-chart-versions
-    runs-on: ubuntu-latest
-    steps:
       - name: Trigger publish workflow
         uses: actions/github-script@v7
         with:
           script: |
+            const newVersion = process.env.NEW_VERSION;
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'gha-publish-chart.yaml',
               ref: 'master',
               inputs: {
-                ref: '',
-                release_tag_name: '${{ inputs.new_version }}',
-                push_to_registries: '${{ inputs.push_to_registries }}',
-                publish_gha_runner_scale_set_controller_chart: 'true',
-                publish_gha_runner_scale_set_chart: 'true'
+                ref: "",
+                release_tag_name: newVersion,
+                push_to_registries: "${{ inputs.push_to_registries }}",
+                publish_gha_runner_scale_set_controller_chart: "true",
+                publish_gha_runner_scale_set_chart: "true"
               }
-            }); 
+            });

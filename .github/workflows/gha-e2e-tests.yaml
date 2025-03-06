@@ -1,12 +1,12 @@
 name: (gha) E2E Tests
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
+  # pull_request:
+  #   branches:
+  #     - master
   workflow_dispatch:
 
 permissions:
