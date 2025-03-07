@@ -1,0 +1,95 @@
+name: Bump and Publish GHA Helm Charts
+
+on:
+  workflow_dispatch:
+    inputs:
+      new_version:
+        description: 'New version number (e.g. 0.10.2)'
+        required: true
+        type: string
+      ref:
+        description: 'The branch, tag or SHA to cut a release from'
+        required: false
+        type: string
+        default: ""
+      push_to_registries:
+        description: 'Push images to registries'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+  actions: write
+
+env:
+  HELM_VERSION: v3.8.0
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  bump-and-publish:
+    runs-on: ubuntu-latest
+    # Set NEW_VERSION to the input value when triggered via workflow_dispatch.
+    env:
+      NEW_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.new_version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Update chart versions for gha-runner-scale-set-controller
+        run: |
+          sed -i "s/^version: .*/version: ${NEW_VERSION}/" charts/gha-runner-scale-set-controller/Chart.yaml
+          sed -i "s/^appVersion: .*/appVersion: \"${NEW_VERSION}\"/" charts/gha-runner-scale-set-controller/Chart.yaml
+
+      - name: Update chart versions for gha-runner-scale-set
+        run: |
+          sed -i "s/^version: .*/version: ${NEW_VERSION}/" charts/gha-runner-scale-set/Chart.yaml
+          sed -i "s/^appVersion: .*/appVersion: \"${NEW_VERSION}\"/" charts/gha-runner-scale-set/Chart.yaml
+
+      - name: Verify versions match
+        run: ./hack/check-gh-chart-versions.sh ${NEW_VERSION}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          title: "chore: bump chart versions to ${{ env.NEW_VERSION }}"
+          commit-message: "chore: bump chart versions to ${{ env.NEW_VERSION }}"
+          branch: "bump-chart-version-${{ env.NEW_VERSION }}"
+          base: "master"
+          body: |
+            Automated PR to bump chart versions:
+            - gha-runner-scale-set-controller: ${{ env.NEW_VERSION }}
+            - gha-runner-scale-set: ${{ env.NEW_VERSION }}
+            
+            Please review and merge to trigger chart publishing.
+
+      - name: Trigger publish workflow
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const newVersion = process.env.NEW_VERSION;
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'gha-publish-chart.yaml',
+              ref: 'master',
+              inputs: {
+                ref: "",
+                release_tag_name: newVersion,
+                push_to_registries: "${{ inputs.push_to_registries }}",
+                publish_gha_runner_scale_set_controller_chart: "true",
+                publish_gha_runner_scale_set_chart: "true"
+              }
+            });
