@@ -7,7 +7,6 @@ on:
         description: 'New version number (e.g. 0.10.2)'
         required: true
         type: string
-        default: "0.10.2" # test
       ref:
         description: 'The branch, tag or SHA to cut a release from'
         required: false
@@ -18,9 +17,6 @@ on:
         required: true
         type: boolean
         default: false
-  pull_request:
-    branches:
-      - master
 
 permissions:
   contents: write
@@ -39,9 +35,8 @@ jobs:
   bump-and-publish:
     runs-on: ubuntu-latest
     # Set NEW_VERSION to the input value when triggered via workflow_dispatch.
-    # Otherwise (e.g. for pull_request events) default to "0.10.2".
     env:
-      NEW_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.new_version || '0.10.2' }}
+      NEW_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.new_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
