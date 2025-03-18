@@ -6,8 +6,8 @@ This guide provides step-by-step instructions for publishing new versions of the
 
 The GHA Helm chart publishing process is handled by two workflows:
 
-1. **gha-bump-and-publish-charts.yaml** - Bumps chart versions and creates a PR
-2. **gha-publish-chart.yaml** - Builds the controller image and publishes the Helm charts
+1. **[gha-bump-and-publish-charts.yaml](.github/workflows/gha-bump-and-publish-charts.yaml)** - Bumps chart versions and creates a PR
+2. **[gha-publish-chart.yaml](.github/workflows/gha-publish-chart.yaml)** - Builds the controller image and publishes the Helm charts
 
 The process automatically updates version numbers in the charts, creates a PR for review, and then triggers the publishing workflow to build and publish both the controller image and Helm charts.
 
@@ -49,9 +49,9 @@ The workflow automatically:
 1. Checks out the specified reference (or default branch)
 2. Configures Git with the user information
 3. Updates the version and appVersion fields in:
-   - `charts/gha-runner-scale-set-controller/Chart.yaml`
-   - `charts/gha-runner-scale-set/Chart.yaml`
-4. Verifies that the updated versions match using `./hack/check-gh-chart-versions.sh`
+   - [charts/gha-runner-scale-set-controller/Chart.yaml](charts/gha-runner-scale-set-controller/Chart.yaml)
+   - [charts/gha-runner-scale-set/Chart.yaml](charts/gha-runner-scale-set/Chart.yaml)
+4. Verifies that the updated versions match using [hack/check-gh-chart-versions.sh](hack/check-gh-chart-versions.sh)
 
 #### b. Pull Request Creation
 
@@ -109,27 +109,6 @@ After the workflows complete:
    - `ghcr.io/{org}/actions-runner-controller-charts/gha-runner-scale-set-controller:{version}`
    - `ghcr.io/{org}/actions-runner-controller-charts/gha-runner-scale-set:{version}`
 
-## Complete Release Process
-
-For a complete release of GHA runner components:
-
-1. Prepare and merge a release PR to update the chart versions
-2. Follow the steps above to publish the Helm charts
-3. Create a release tag matching the version (format: `gha-runner-scale-set-{version}`)
-
-## Troubleshooting
-
-If you encounter issues during the publishing process:
-
-- Check the workflow run logs for errors
-- Ensure you have the necessary permissions
-- Verify that the chart versions are correctly updated
-- Check that the controller image is built and pushed successfully
+https://github.com/orgs/devzero-inc/packages?repo_name=actions-runner-controller
 
 If the publish workflow fails after the PR is merged, you can manually trigger it with the correct parameters.
-
-## References
-
-- [Workflow file: gha-bump-and-publish-charts.yaml](https://github.com/actions/actions-runner-controller/blob/master/.github/workflows/gha-bump-and-publish-charts.yaml)
-- [Workflow file: gha-publish-chart.yaml](https://github.com/actions/actions-runner-controller/blob/master/.github/workflows/gha-publish-chart.yaml)
-- [Contributing Guide](https://github.com/actions/actions-runner-controller/blob/master/CONTRIBUTING.md#release-gha-runner-scale-set-controller-image-and-helm-charts)
